@@ -9,6 +9,8 @@
 </head>
 
 <body>
+    <div style="display: none;" id="guessesCorrectly" value="0"></div>
+    <div style="display: none;" id="nGuesses" value="5"></div>
     <div>
         <button id="rotationButton">Stop</button>
         <button id="test">Stop</button>
@@ -21,18 +23,18 @@
     <div id="cesiumContainer"></div>
 
     <script type="module">
-    import data from './building_data.json' assert { type: 'json' };
-    console.log(1);
-  
-   
+        import data from './building_data.json' assert { type: 'json' };
+        console.log(1);
+
+
         let rnd = Math.floor(Math.random() * data.buildings.length);
         console.log(data.buildings[rnd]);
 
         async function main(longitude, latitude, height, distance) {
-           
+
 
             // Usage!
-            
+
 
             let state = true;
             let button = document.getElementById("rotationButton");
@@ -64,16 +66,16 @@
             } catch (error) {
                 console.log(`Failed to load tileset: ${error}`);
             }
-            
+
             const center = Cesium.Cartesian3.fromDegrees(longitude, latitude, height);
             // Fly the camera to San Francisco at the given longitude, latitude, and height.
             const transform = Cesium.Transforms.eastNorthUpToFixedFrame(center);
 
             var heading = 0;
             var pitch = -0.3;
-           
-            
-              function sleep(time) {
+
+
+            function sleep(time) {
                 return new Promise((resolve) => setTimeout(resolve, time));
             }
             viewer.camera.flyTo({
@@ -87,8 +89,8 @@
                 duration: 3,
                 maximumHeight: 1000,
                 complete: function () {
-                      viewer.camera.lookAt(center, new Cesium.HeadingPitchRange(heading, pitch, distance));
-                    sleep(3000).then(() => {
+                    viewer.camera.lookAt(center, new Cesium.HeadingPitchRange(heading, pitch, distance));
+                    sleep(4000).then(() => {
                         viewer.clock.onTick.addEventListener(() => {
                             if (state) {
 
@@ -101,32 +103,69 @@
                 },
 
             });
-            
-          
-          
+
+
+
 
             // Usage!
-           
 
-           
+
+
 
 
 
             viewer.animation.container.style.visibility = 'hidden';
             viewer.timeline.container.style.visibility = 'hidden';
-            viewer.forceResize();
+
             // Add Cesium OSM Buildings, a global 3D buildings layer.
             // const buildingTileset = await Cesium.createOsmBuildingsAsync();
             // viewer.scene.primitives.add(buildingTileset);   
 
         }
-        
-        main(data.buildings[rnd].longitude, data.buildings[rnd].latitude, data.buildings[rnd].height, data.buildings[rnd].distance);
 
+        main(data.buildings[rnd].longitude, data.buildings[rnd].latitude, data.buildings[rnd].height, data.buildings[rnd].distance);
+        let button = document.getElementById("guessButton");
+        button.addEventListener("click", () => {
+            let guess = document.getElementById("guessInput").value;
+            let guessType = document.querySelector("select").value;
+            function gamemodeGuess(guessType, guess) {
+                if (guessType == "building") {
+                    if (guess == data.buildings[rnd].name) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else if (guessType == "city") {
+                    if (guess == data.buildings[rnd].city) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else if (guessType == "country") {
+                    if (guess == data.buildings[rnd].country) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }
+
+            if (gamemodeGuess(guessType, guess)) {
+                //                 <div style="display: none;" id="guessesCorrectly" value="0"></div>
+                // <div style="display: none;" id="nGuesses" value="5"></div>
+                document.getElementById("guessesCorrectly").value = parseInt(document.getElementById("guessesCorrectly").value) + 1;
+                document.getElementById("nGuesses").value = parseInt(document.getElementById("nGuesses").value) - 1;
+                document.getElementById("guessInput").value = "";
+                rnd = Math.floor(Math.random() * data.buildings.length);
+                main(data.buildings[rnd].longitude, data.buildings[rnd].latitude, data.buildings[rnd].height, data.buildings[rnd].distance);
+            }
+
+        });
 
 
     </script>
-    <div id="guessDiv"><input placeholder="guess goes here"></div>
+    <div id="guessDiv"><input id="guessInput" placeholder="guess goes here"> <button id="guessButton">Guess</button>
+    </div>
 
 </body>
 

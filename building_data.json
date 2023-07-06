@@ -119,6 +119,24 @@
       "city": "Sydney",
       "country": "Australia",
       "distance": "400"
+    },{
+      "name": "Reichstag Building",
+      "longitude": "13.3761872",
+      "latitude": "52.5186202",
+      "height": "100",
+      "fun_fact": "It is the seat of the German parliament (Bundestag). It is a historic building with a modern glass dome that offers panoramic views of Berlin. The Reichstag has witnessed significant events throughout Germany's history and stands as a symbol of democracy.",
+      "city": "Berlin",
+      "country": "Germany",
+      "distance": "370"
+    },{
+      "name": "Cologne Cathedral",
+      "longitude": "6.9582814",
+      "latitude": "50.9412784",
+      "height": "177",
+      "fun_fact": "The Cologne Cathedral is a magnificent Gothic masterpiece and one of the largest cathedrals in the world. Construction of the cathedral began in the 13th century and was completed in the 19th century. It is known for its intricate architecture, stunning stained glass windows, and its Shrine of the Three Kings, which is said to hold the relics of the biblical Magi.",
+      "city": "Cologne",
+      "country": "Germany",
+      "distance": "300"
     }
   ]
 }
