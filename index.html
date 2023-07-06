@@ -10,54 +10,106 @@
 
 <body>
     <div>
-        test
+        <button id="rotationButton">Stop</button>
+        <button id="test">Stop</button>
+        <select>
+            <option value="building">Guess the Building</option>
+            <option selected value="city">Guess the City</option>
+            <option value="country">Guess the Country</option>
+        </select>
     </div>
     <div id="cesiumContainer"></div>
+
     <script type="module">
-        // Your access token can be found at: https://ion.cesium.com/tokens.
-        // This is the default access token from your ion account
+    import data from './data.json' assert { type: 'json' };
 
-        Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJhNmE3MGUwMC0xZTFlLTRjNzUtYjRiZi0xMTg4NmRkMWFkMmUiLCJpZCI6MTUxOTAwLCJpYXQiOjE2ODg2NDM5NzV9.R_qSu5vM04YAu20SES8mNMhc_gxaoW1B2wPqP_cbr4I';
+        
 
-        // Initialize the Cesium Viewer in the HTML element with the `cesiumContainer` ID.
-        const viewer = new Cesium.Viewer("cesiumContainer", {
-            globe: false,
-        });
-        try {
-            const tileset = await Cesium.createGooglePhotorealistic3DTileset();
-            viewer.scene.primitives.add(tileset);
-        } catch (error) {
-            console.log(`Failed to load tileset: ${error}`);
-        }
+        async function main(longitude, latitude, height) {
+            
+            let state = true;
+            let button = document.getElementById("rotationButton");
+            button.addEventListener("click", () => {
+                if (state) {
+                    state = false;
+                    button.innerHTML = "Start";
+                } else {
+                    state = true;
+                    button.innerHTML = "Stop";
+                }
+            });
 
-        // Fly the camera to San Francisco at the given longitude, latitude, and height.
-        viewer.camera.flyTo({
-            //42.43278 25.64194
-            destination: Cesium.Cartesian3.fromDegrees(3.7989, 51.3691, 500),
-            orientation: {
-                heading: Cesium.Math.toRadians(0.0),
-                pitch: Cesium.Math.toRadians(-35.0),
+
+
+
+            // Your access token can be found at: https://ion.cesium.com/tokens.
+            // This is the default access token from your ion account
+
+            Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJhNmE3MGUwMC0xZTFlLTRjNzUtYjRiZi0xMTg4NmRkMWFkMmUiLCJpZCI6MTUxOTAwLCJpYXQiOjE2ODg2NDM5NzV9.R_qSu5vM04YAu20SES8mNMhc_gxaoW1B2wPqP_cbr4I';
+
+            // Initialize the Cesium Viewer in the HTML element with the `cesiumContainer` ID.
+            const viewer = new Cesium.Viewer("cesiumContainer", {
+                globe: false,
+            });
+            try {
+                const tileset = await Cesium.createGooglePhotorealistic3DTileset();
+                viewer.scene.primitives.add(tileset);
+            } catch (error) {
+                console.log(`Failed to load tileset: ${error}`);
             }
-        });
-       const center = Cesium.Cartesian3.fromDegrees(3.6147525,  51.4994489, 100);
-        const transform = Cesium.Transforms.eastNorthUpToFixedFrame(center);
+            
+            const center = Cesium.Cartesian3.fromDegrees(3.6147525, 51.4994489, 100);
+            // Fly the camera to San Francisco at the given longitude, latitude, and height.
+            const transform = Cesium.Transforms.eastNorthUpToFixedFrame(center);
 
-        var heading = 0;
-        var pitch = -0.5;
-        var distance = 300;
-        viewer.clock.onTick.addEventListener(() => {
-            heading += 1 * (Math.PI / 2000);
-            viewer.camera.lookAt(center, new Cesium.HeadingPitchRange(heading, pitch, distance));
-        });
+            var heading = 0;
+            var pitch = -0.3;
+            var distance = 200;
 
-        viewer.animation.container.style.visibility = 'hidden';
-        viewer.timeline.container.style.visibility = 'hidden';
-        viewer.forceResize();
-        // Add Cesium OSM Buildings, a global 3D buildings layer.
-        // const buildingTileset = await Cesium.createOsmBuildingsAsync();
-        // viewer.scene.primitives.add(buildingTileset);   
+
+            viewer.camera.flyTo({
+                //42.43278 25.64194
+                destination: Cesium.Cartesian3.fromDegrees(3.6147525, 51.4994489, 150),
+                orientation: {
+                    heading: 0,
+                    pitch: -0.3,
+                    roll: 0.0
+                },
+                duration: 6,
+                maximumHeight: 1000,
+                complete: function () {
+                    viewer.clock.onTick.addEventListener(() => {
+                        if (state) {
+
+                            heading += 1 * (Math.PI / 2000);
+                            viewer.camera.lookAt(center, new Cesium.HeadingPitchRange(heading, pitch, distance));
+
+                        }
+                    });
+                },
+
+            });
+
+
+
+
+
+
+            viewer.animation.container.style.visibility = 'hidden';
+            viewer.timeline.container.style.visibility = 'hidden';
+            viewer.forceResize();
+            // Add Cesium OSM Buildings, a global 3D buildings layer.
+            // const buildingTileset = await Cesium.createOsmBuildingsAsync();
+            // viewer.scene.primitives.add(buildingTileset);   
+
+        }
+        main();
+
+
+
     </script>
-    </div>
+    <div id="guessDiv"><input placeholder="guess goes here"></div>
+
 </body>
 
 </html>

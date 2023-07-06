@@ -1,0 +1,74 @@
+{
+  "buildings": [
+    {
+      "name": "Eiffel Tower",
+      "longitude": "2.2945",
+      "latitude": "48.8584",
+      "height": "330",
+      "fun_fact": "It was constructed for the 1889 Exposition Universelle in Paris.",
+      "city": "Paris",
+      "country": "France"
+    },
+    {
+      "name": "CCTV Headquarters",
+      "longitude": "39.91347",
+      "latitude": "116.45805",
+      "height": "234",
+      "fun_fact": "Because of its radical shape, it is said that a taxi driver first came up with its nickname dà kùchǎ (大裤衩), roughly translated as \"big boxer shorts\".",
+      "city": "Beijing",
+      "country": "China"
+    },
+    {
+      "name": "Great Pyramid of Giza",
+      "longitude": "29.5845",
+      "latitude": "31.0803",
+      "height": "138.5",
+      "fun_fact": "It's the oldest and last remaining of the original seven world wonders.",
+      "city": "Cairo",
+      "country": "Egypt"
+    },
+    {
+      "name": "St. Peter's Basilica",
+      "longitude": "41.5408",
+      "latitude": "12.2712",
+      "height": "138.5",
+      "fun_fact": "It Took 120 Years To Build and was only finished in 1675.",
+      "city": "Vatican City",
+      "country": "Vatican City"
+    },
+    {
+      "name": "Taj Mahal",
+      "longitude": "27.1030",
+      "latitude": "78.0231",
+      "height": "73",
+      "fun_fact": "The materials needed to build the Taj Mahal were transported with the help of over 1,000 elephants.",
+      "city": "Agra",
+      "country": "India"
+    },
+    {
+      "name": "Empire State Building",
+      "longitude": "-73.9857",
+      "latitude": "40.7484",
+      "height": "443.2",
+      "fun_fact": "The Empire State Building is an iconic skyscraper in New York City and was the tallest building in the world until 1970.",
+      "city": "New York City",
+      "country": "United States"
+    },
+    {
+      "name": "White House",
+      "longitude": "-77.0366",
+      "latitude": "38.8977",
+      "height": "21",
+      "fun_fact": "The White House is the official residence and workplace of the President of the United States. It is an iconic symbol of American democracy and serves as a historic and political landmark in Washington, D.C.",
+      "city": "Washington, D.C.",
+      "country": "United States"
+    },
+    {
+      "name": "Space Needle",
+      "longitude": "-122.3493",
+      "latitude": "47.6205",
+      "height": "184",
+      "fun_fact": "The Space Needle is an observation tower and a prominent landmark in Seattle. Built for the 1962 World's Fair, it offers panoramic views of the city, including the downtown skyline, Elliott Bay, and the surrounding mountains."
+    }
+  ]
+}
