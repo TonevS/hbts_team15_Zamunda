@@ -46,6 +46,8 @@
       "latitude": "47.6205",
       "height": "164",
       "fun_fact": "The Space Needle is an observation tower and a prominent landmark in Seattle. Built for the 1962 World's Fair, it offers panoramic views of the city, including the downtown skyline, Elliott Bay, and the surrounding mountains.",
+      "country":"United States",
+      "city": "Seattle",
       "distance": "500"
     }
   ]
