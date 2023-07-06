@@ -9,8 +9,8 @@
 </head>
 
 <body>
-    <div style="display: none;" id="guessesCorrectly" value="0"></div>
-    <div style="display: none;" id="nGuesses" value="5"></div>
+    <div style="display: none;" id="guessesCorrectly">0</div>
+    <div style="display: none;" id="nGuesses">5</div>
     <div>
         <button id="rotationButton">Stop</button>
         <button id="test">Stop</button>
@@ -25,29 +25,34 @@
     <script type="module">
         import data from './building_data.json' assert { type: 'json' };
         console.log(1);
+        let state = true;
+        let rndArray = [];
+        for (let i = 0; i < 5; i++) {
+            let rnd = Math.floor(Math.random() * data.buildings.length);
+            if (rndArray.includes(data.buildings[rnd])) {
+                i--;
+            } else {
+                rndArray.push(data.buildings[rnd]);
+            }
 
+        }
+        console.log(rndArray);
 
-        let rnd = Math.floor(Math.random() * data.buildings.length);
-        console.log(data.buildings[rnd]);
-
+        const viewer = new Cesium.Viewer("cesiumContainer", {
+            globe: false,
+        });
+        try {
+            const tileset = await Cesium.createGooglePhotorealistic3DTileset();
+            viewer.scene.primitives.add(tileset);
+        } catch (error) {
+            console.log(`Failed to load tileset: ${error}`);
+        }
+        let buttonRotate = document.getElementById("rotationButton");
+        buttonRotate.addEventListener("click", () => {
+            state = !state;
+        });
         async function main(longitude, latitude, height, distance) {
-
-
             // Usage!
-
-
-            let state = true;
-            let button = document.getElementById("rotationButton");
-            button.addEventListener("click", () => {
-                if (state) {
-                    state = false;
-                    button.innerHTML = "Start";
-                } else {
-                    state = true;
-                    button.innerHTML = "Stop";
-                }
-            });
-
 
 
 
@@ -57,15 +62,7 @@
             Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJhNmE3MGUwMC0xZTFlLTRjNzUtYjRiZi0xMTg4NmRkMWFkMmUiLCJpZCI6MTUxOTAwLCJpYXQiOjE2ODg2NDM5NzV9.R_qSu5vM04YAu20SES8mNMhc_gxaoW1B2wPqP_cbr4I';
 
             // Initialize the Cesium Viewer in the HTML element with the `cesiumContainer` ID.
-            const viewer = new Cesium.Viewer("cesiumContainer", {
-                globe: false,
-            });
-            try {
-                const tileset = await Cesium.createGooglePhotorealistic3DTileset();
-                viewer.scene.primitives.add(tileset);
-            } catch (error) {
-                console.log(`Failed to load tileset: ${error}`);
-            }
+
 
             const center = Cesium.Cartesian3.fromDegrees(longitude, latitude, height);
             // Fly the camera to San Francisco at the given longitude, latitude, and height.
@@ -78,6 +75,7 @@
             function sleep(time) {
                 return new Promise((resolve) => setTimeout(resolve, time));
             }
+
             viewer.camera.flyTo({
                 //42.43278 25.64194
                 destination: Cesium.Cartesian3.fromDegrees(longitude, latitude, height),
@@ -91,6 +89,8 @@
                 complete: function () {
                     viewer.camera.lookAt(center, new Cesium.HeadingPitchRange(heading, pitch, distance));
                     sleep(4000).then(() => {
+                        state = true;
+                        console.log(state);
                         viewer.clock.onTick.addEventListener(() => {
                             if (state) {
 
@@ -122,43 +122,60 @@
             // viewer.scene.primitives.add(buildingTileset);   
 
         }
+        function playRound(jsonArray) {
+            const item = jsonArray.pop();
+            console.log(item);
+            state = false;
+            main(item.longitude, item.latitude, item.height, item.distance);
+            return item;
+        }
+        // main(data.buildings[rnd].longitude, data.buildings[rnd].latitude, data.buildings[rnd].height, data.buildings[rnd].distance);
+        let usedArray = playRound(rndArray);
 
-        main(data.buildings[rnd].longitude, data.buildings[rnd].latitude, data.buildings[rnd].height, data.buildings[rnd].distance);
+        function gamemodeGuess(guessType, guess) {
+            if (guessType == "building") {
+                if (guess == usedArray.name) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else if (guessType == "city") {
+                if (guess == usedArray.city) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else if (guessType == "country") {
+                if (guess == usedArray.country) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+
         let button = document.getElementById("guessButton");
         button.addEventListener("click", () => {
             let guess = document.getElementById("guessInput").value;
             let guessType = document.querySelector("select").value;
-            function gamemodeGuess(guessType, guess) {
-                if (guessType == "building") {
-                    if (guess == data.buildings[rnd].name) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                } else if (guessType == "city") {
-                    if (guess == data.buildings[rnd].city) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                } else if (guessType == "country") {
-                    if (guess == data.buildings[rnd].country) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-            }
 
+            console.log("dog");
             if (gamemodeGuess(guessType, guess)) {
                 //                 <div style="display: none;" id="guessesCorrectly" value="0"></div>
                 // <div style="display: none;" id="nGuesses" value="5"></div>
-                document.getElementById("guessesCorrectly").value = parseInt(document.getElementById("guessesCorrectly").value) + 1;
-                document.getElementById("nGuesses").value = parseInt(document.getElementById("nGuesses").value) - 1;
-                document.getElementById("guessInput").value = "";
-                rnd = Math.floor(Math.random() * data.buildings.length);
-                main(data.buildings[rnd].longitude, data.buildings[rnd].latitude, data.buildings[rnd].height, data.buildings[rnd].distance);
+                document.getElementById("guessesCorrectly").innerHTML = parseInt(document.getElementById("guessesCorrectly").innerHTML) + 1;
+                document.getElementById("guessInput").innerHTML = "";
+                console.log("GUESS WAS CORRECT :DDDDDD")
             }
+
+            document.getElementById("nGuesses").innerHTML = parseInt(document.getElementById("nGuesses").innerHTML) - 1;
+            console.log(document.getElementById("nGuesses").innerHTML);
+            if (document.getElementById("nGuesses").innerHTML == 0) {
+                document.getElementById("guessDiv").innerHTML = "You got " + document.getElementById("guessesCorrectly").innerHTML + " out of 5 correct";
+            } else {
+                usedArray = playRound(rndArray);
+            }
+
 
         });
 
