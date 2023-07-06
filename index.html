@@ -21,11 +21,13 @@
     <div id="cesiumContainer"></div>
 
     <script type="module">
-    import data from './data.json' assert { type: 'json' };
+    import data from './building_data.json' assert { type: 'json' };
 
         
+        let rnd = Math.floor(Math.random() * data.buildings.length);
+        console.log(data.buildings[rnd]);
 
-        async function main(longitude, latitude, height) {
+        async function main(longitude, latitude, height, distance) {
             
             let state = true;
             let button = document.getElementById("rotationButton");
@@ -58,18 +60,18 @@
                 console.log(`Failed to load tileset: ${error}`);
             }
             
-            const center = Cesium.Cartesian3.fromDegrees(3.6147525, 51.4994489, 100);
+            const center = Cesium.Cartesian3.fromDegrees(longitude, latitude, height);
             // Fly the camera to San Francisco at the given longitude, latitude, and height.
             const transform = Cesium.Transforms.eastNorthUpToFixedFrame(center);
 
             var heading = 0;
             var pitch = -0.3;
-            var distance = 200;
+           
 
 
             viewer.camera.flyTo({
                 //42.43278 25.64194
-                destination: Cesium.Cartesian3.fromDegrees(3.6147525, 51.4994489, 150),
+                destination: Cesium.Cartesian3.fromDegrees(longitude, latitude, height),
                 orientation: {
                     heading: 0,
                     pitch: -0.3,
@@ -103,7 +105,8 @@
             // viewer.scene.primitives.add(buildingTileset);   
 
         }
-        main();
+        
+        main(data.buildings[rnd].longitude, data.buildings[rnd].latitude, data.buildings[rnd].height, data.buildings[rnd].distance);
 
 
 
