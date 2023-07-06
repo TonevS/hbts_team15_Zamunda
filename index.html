@@ -22,13 +22,18 @@
 
     <script type="module">
     import data from './building_data.json' assert { type: 'json' };
-
-        
+    console.log(1);
+  
+   
         let rnd = Math.floor(Math.random() * data.buildings.length);
         console.log(data.buildings[rnd]);
 
         async function main(longitude, latitude, height, distance) {
+           
+
+            // Usage!
             
+
             let state = true;
             let button = document.getElementById("rotationButton");
             button.addEventListener("click", () => {
@@ -67,8 +72,10 @@
             var heading = 0;
             var pitch = -0.3;
            
-
-
+            
+              function sleep(time) {
+                return new Promise((resolve) => setTimeout(resolve, time));
+            }
             viewer.camera.flyTo({
                 //42.43278 25.64194
                 destination: Cesium.Cartesian3.fromDegrees(longitude, latitude, height),
@@ -77,23 +84,31 @@
                     pitch: -0.3,
                     roll: 0.0
                 },
-                duration: 6,
+                duration: 3,
                 maximumHeight: 1000,
                 complete: function () {
-                    viewer.clock.onTick.addEventListener(() => {
-                        if (state) {
+                      viewer.camera.lookAt(center, new Cesium.HeadingPitchRange(heading, pitch, distance));
+                    sleep(3000).then(() => {
+                        viewer.clock.onTick.addEventListener(() => {
+                            if (state) {
 
-                            heading += 1 * (Math.PI / 2000);
-                            viewer.camera.lookAt(center, new Cesium.HeadingPitchRange(heading, pitch, distance));
+                                heading += 1 * (Math.PI / 2000);
+                                viewer.camera.lookAt(center, new Cesium.HeadingPitchRange(heading, pitch, distance));
 
-                        }
+                            }
+                        });
                     });
                 },
 
             });
+            
+          
+          
 
+            // Usage!
+           
 
-
+           
 
 
 

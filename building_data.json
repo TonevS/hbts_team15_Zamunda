@@ -46,9 +46,79 @@
       "latitude": "47.6205",
       "height": "164",
       "fun_fact": "The Space Needle is an observation tower and a prominent landmark in Seattle. Built for the 1962 World's Fair, it offers panoramic views of the city, including the downtown skyline, Elliott Bay, and the surrounding mountains.",
-      "country":"United States",
+      "country": "United States",
       "city": "Seattle",
       "distance": "500"
+    },
+    {
+      "name": "Tokyo Tower",
+      "longitude": "139.74541",
+      "latitude": "35.65861",
+      "height": "183",
+      "fun_fact": "The Tokyo Tower gets a fresh coat of paint every five years. It takes a whole year to paint the entire tower.",
+      "city": "Tokyo",
+      "country": "Japan",
+      "distance": "700"
+    },
+    {
+      "name": "Tower of Pisa",
+      "longitude": "10.39666138",
+      "latitude": "43.72292805",
+      "height": "55.86",
+      "fun_fact": "The Leaning Tower of Pisa is famous for its unintended tilt. It began to lean during construction due to an inadequate foundation.",
+      "city": "Pisa",
+      "country": "Italy",
+      "distance": "250"
+    },
+    {
+      "name": "Euromast",
+      "longitude": "4.4666374",
+      "latitude": "51.9054439",
+      "height": "145",
+      "fun_fact": "It is possible for participants to descend from a height of 100 meters (328 feet) under the guidance of experienced instructors.",
+      "city": "Rotterdam",
+      "country": "The Netherlands",
+      "distance": "400"
+    },
+    {
+      "name": "Alexander Nevsky Cathedral",
+      "longitude": "23.3328704",
+      "latitude": "42.6958847",
+      "height": "603.2",
+      "fun_fact": "It was built in the early 20th century and features stunning Byzantine and Bulgarian architectural elements. The cathedral is dedicated to the memory of Russian soldiers who died during the Russo-Turkish War of 1877-1878.",
+      "city": "Sofia",
+      "country": "Bulgaria",
+      "distance": "250"
+    },
+    {
+      "name": "HZ University",
+      "longitude": "3.60946",
+      "latitude": "51.49475",
+      "height": "77",
+      "fun_fact": "We study there.",
+      "city": "Middelburg",
+      "country": "Netherlands",
+      "distance": "150"
+    },
+    {
+      "name": "Marina Bay Sands",
+      "longitude": "103.8587",
+      "latitude": "1.2836",
+      "height": "200",
+      "fun_fact": "Marina Bay Sands is an iconic integrated resort complex located in Singapore, known for its distinctive architecture and luxurious amenities.",
+      "city": "Singapore",
+      "country": "Singapore",
+      "distance": "500"
+    },
+    {
+      "name": "Sydney Opera House",
+      "longitude": "151.2152967",
+      "latitude": "-33.8567844",
+      "height": "25",
+      "fun_fact": "The iconic exterior of the Opera House is made up of over one million glazed white ceramic tiles. The tiles were specially designed to reflect sunlight and create an ever-changing appearance throughout the day.",
+      "city": "Sydney",
+      "country": "Australia",
+      "distance": "400"
     }
   ]
 }
