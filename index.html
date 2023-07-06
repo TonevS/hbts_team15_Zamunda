@@ -9,9 +9,9 @@
 </head>
 
 <body>
-   <div>
-    test
-   </div>
+    <div>
+        test
+    </div>
     <div id="cesiumContainer"></div>
     <script type="module">
         // Your access token can be found at: https://ion.cesium.com/tokens.
@@ -20,15 +20,15 @@
         Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJhNmE3MGUwMC0xZTFlLTRjNzUtYjRiZi0xMTg4NmRkMWFkMmUiLCJpZCI6MTUxOTAwLCJpYXQiOjE2ODg2NDM5NzV9.R_qSu5vM04YAu20SES8mNMhc_gxaoW1B2wPqP_cbr4I';
 
         // Initialize the Cesium Viewer in the HTML element with the `cesiumContainer` ID.
-       const viewer = new Cesium.Viewer("cesiumContainer", {
+        const viewer = new Cesium.Viewer("cesiumContainer", {
             globe: false,
         });
         try {
-                const tileset = await Cesium.createGooglePhotorealistic3DTileset();
-                viewer.scene.primitives.add(tileset);
-            } catch (error) {
-                console.log(`Failed to load tileset: ${error}`);
-            }
+            const tileset = await Cesium.createGooglePhotorealistic3DTileset();
+            viewer.scene.primitives.add(tileset);
+        } catch (error) {
+            console.log(`Failed to load tileset: ${error}`);
+        }
 
         // Fly the camera to San Francisco at the given longitude, latitude, and height.
         viewer.camera.flyTo({
@@ -39,7 +39,16 @@
                 pitch: Cesium.Math.toRadians(-35.0),
             }
         });
+       const center = Cesium.Cartesian3.fromDegrees(3.6147525,  51.4994489, 100);
+        const transform = Cesium.Transforms.eastNorthUpToFixedFrame(center);
 
+        var heading = 0;
+        var pitch = -0.5;
+        var distance = 300;
+        viewer.clock.onTick.addEventListener(() => {
+            heading += 1 * (Math.PI / 2000);
+            viewer.camera.lookAt(center, new Cesium.HeadingPitchRange(heading, pitch, distance));
+        });
 
         viewer.animation.container.style.visibility = 'hidden';
         viewer.timeline.container.style.visibility = 'hidden';
