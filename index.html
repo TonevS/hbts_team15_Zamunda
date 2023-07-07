@@ -19,7 +19,12 @@
             padding: 5px;
 
         }
-
+        button:hover {
+            background-color: rgb(186, 186, 186);
+            color: black !important;
+            border: 1px solid black !important;
+           
+        }
         button {
             border-radius: 8px;
             border: 0;
@@ -73,7 +78,9 @@
             z-index: 4;
             bottom: -350px;
         }
-
+        .cesium-viewer-bottom {
+            display: none;
+        }
         .advanceContainer {
             position: absolute;
             display: flex;
@@ -104,18 +111,29 @@
     <div style="display: none;" id="guessesCorrectly">0</div>
     <div style="display: none;" id="nGuesses">5</div>
     <div id="scorePopup" class="content-box scoreContainer" style="display: none;">
-        <p id="score"></p>
+        <p style="text-align: center;" id="score"></p>
         <button id="nextRound" onclick="location.reload();">Next Round</button>
-        <p style="font-size: 1.5em;" id="credits"> 
-        Ivo Petkov,
-        Lewie Zhu,
-        Antani Tonev,
-        Damyan Dimitrov,
-        Emil Hristov,
-        Samuel Chukwu,
-        Michal Jakubowski, 
+        <p style="font-size: 1.5em; text-align: center;" id="credits">
+            <span style="font-size: 1.4em; color:crimson">Credits:<br></span>
+            <span class="blue">Ivo Petkov<br></span>
+            <span class="black">Lewie Zhu<br></span>
+            <span class="blue">Antani Tonev<br></span>
+            <span class="black">Damyan Dimitrov<br></span>
+            <span class="blue">Emil Hristov<br></span>
+            <span class="black">Samuel Chukwu<br></span>
+            <span class="blue">Michal Jakubowski<br></span>
         </p>
     </div>
+</body>
+<style>
+    .blue {
+        color: blue;
+    }
+
+    .black {
+        color: black;
+    }
+</style>
     <div class="content-box settingsContainer">
         <select>
             <option value="building">Guess the Building</option>
@@ -126,7 +144,7 @@
         <button id="test" onclick="location.reload();">Restart</button>
       
     </div>
-    <div id="cesiumContainer"></div>
+    <div id="cesiumContainer" style="height: 100vh;"></div>
     <div class="advanceContainer content-box">
         <span style="font-size: 2em;" id="answer"></span>
         <p style=" width: 90%;  text-justify: inter-word;text-align: justify; " id="fun-fact"></p>
@@ -183,17 +201,19 @@
             function sleep(time) {
                 return new Promise((resolve) => setTimeout(resolve, time));
             }
+   
+
 
             viewer.camera.flyTo({
                 //42.43278 25.64194
                 destination: Cesium.Cartesian3.fromDegrees(longitude, latitude, height),
                 orientation: {
                     heading: 0,
-                    pitch: -0.3,
-                    roll: 0.0
+                    pitch: -1
+                    
                 },
-                duration: 3,
-                maximumHeight: 1000,
+                duration: 5,
+                minimumHeight: 5000,
                 complete: function () {
                     viewer.camera.lookAt(center, new Cesium.HeadingPitchRange(heading, pitch, distance));
                     sleep(4000).then(() => {
@@ -392,7 +412,7 @@
         <input id="guessInput" placeholder="Enter your guess here."
             style="flex: 1; border-radius: 8px; border: 0; padding: 2px;   box-shadow: inset 0 0 10px #ababab;">
         <button id="guessButton"
-            style=" border-radius: 8px; border:0; background-color: rgb(36, 36, 36); color:white;">Guess</button>
+            style=" border-radius: 8px; border:0; ">Guess</button>
     </div>
 
 </body>

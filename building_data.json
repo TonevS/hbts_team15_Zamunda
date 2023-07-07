@@ -97,7 +97,7 @@
       "height": "77",
       "fun_fact": "We study there.",
       "city": "Middelburg",
-      "country": "Netherlands",
+      "country": "The Netherlands",
       "distance": "150"
     },
     {
@@ -162,13 +162,13 @@
     },
     {
       "name": "Sydney Harbour Bridge",
-      "longitude": "151.21005353",
-      "latitude": "-33.85216674",
-      "height": "205",
+      "longitude": "151.21078674",
+      "latitude": "-33.85198545",
+      "height": "155",
       "fun_fact": "Sydney Harbour Bridge is a steel arch bridge that spans across Sydney Harbour. It is one of the world's largest steel arch bridges and is a significant landmark in Sydney, offering stunning views of the harbor and the city skyline.",
       "city": "Sydney",
       "country": "Australia",
-      "distance": "266"
+      "distance": "666"
     },
     {
       "name": "Big Ben",
@@ -196,7 +196,7 @@
       "latitude": "19.43396857",
       "height": "2302",
       "fun_fact": "The Torre Latinoamericana is a skyscraper located in the historic center of Mexico City. It was completed in 1956 and held the title of the tallest building in Latin America for many years.",
-      "city": " Mexico City",
+      "city": "Mexico City",
       "country": "Mexico",
       "distance": "330"
     },
@@ -206,7 +206,7 @@
       "latitude": "37.97141266",
       "height": "200",
       "fun_fact": "The Acropolis of Athens is an ancient citadel that holds tremendous historical and cultural significance as the birthplace of democracy and the cradle of Western civilization",
-      "city": " Athens",
+      "city": "Athens",
       "country": "Greece",
       "distance": "270"
     }
