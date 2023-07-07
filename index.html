@@ -220,13 +220,18 @@
                                 settingsContainer.style.top = topY + 'px';
                                 requestAnimationFrame(moveElementDown);
                             }
-
                             return;
                         }
                         moveElementDown();
 
                         function moveElementUp() {
-                            if (botY < 30) {
+                            if (window.innerHeight < 700) {
+                                if (botY < 60) {
+                                    botY += speed;
+                                    guessContainer.style.bottom = botY + 'px';
+                                    requestAnimationFrame(moveElementUp);
+                                }
+                            }   else if (botY < 30) {
                                 botY += speed;
                                 guessContainer.style.bottom = botY + 'px';
                                 requestAnimationFrame(moveElementUp);
@@ -234,7 +239,6 @@
                             return;
                         }
                         moveElementUp();
-
                     });
                     
                 },
