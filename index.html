@@ -6,12 +6,83 @@
     <!-- Include the CesiumJS JavaScript and CSS files -->
     <script src="https://cesium.com/downloads/cesiumjs/releases/1.107/Build/Cesium/Cesium.js"></script>
     <link href="https://cesium.com/downloads/cesiumjs/releases/1.107/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+
+    <style>
+        .content-box {
+            background-color: rgb(44, 44, 44);
+            padding: 1em;
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .settingsContainer {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            height: fit-content;
+            left: 2em;
+            top: -100px;
+            z-index: 2;
+        }
+
+        .guessContainer {
+            position: absolute;
+            display: flex;
+            width: 400px;
+            right: 2em;
+            z-index: 2;
+        }
+
+        .scoreContainer {
+            position: absolute;
+            flex-direction: column;
+            width: 400px;
+            left: calc(50% - 250px);
+            filter: none;
+            z-index: 4;
+            bottom: -350px;
+        }
+
+        .advanceContainer {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            width: 300px;
+            left: calc(50% - 200px);
+            bottom: 2em;
+            left: -350px;
+            ;
+            z-index: 2;
+        }
+
+        .rounded {
+            border-radius: 5px;
+        }
+
+        .finishedMap {
+             
+            filter: blur(1.5rem);
+            background: gray;
+            transition: opacity 1.5s ease;
+        }
+
+     
+    </style>
 </head>
 
-<body>
+<body style="position: relative; padding: 0px; margin:0">
+    <div id="bg"></div>
     <div style="display: none;" id="guessesCorrectly">0</div>
     <div style="display: none;" id="nGuesses">5</div>
-    <div>
+    <div id="scorePopup" class="content-box scoreContainer" style = "display: none;">
+        <p id="score"></p>
+        <button id="nextRound" onclick="location.reload();">Next Round</button>
+    </div>
+    <div class="content-box settingsContainer">
         <button id="rotationButton">Stop</button>
         <button id="test">Stop</button>
         <select>
@@ -21,7 +92,11 @@
         </select>
     </div>
     <div id="cesiumContainer"></div>
-
+    <div class="advanceContainer content-box">
+        <span id="answer"></span>
+        <p id="fun-fact"></p>
+        <button id="advanceButton">Next</button>
+    </div>
     <script type="module">
         import data from './building_data.json' assert { type: 'json' };
         console.log(1);
@@ -54,12 +129,10 @@
         async function main(longitude, latitude, height, distance) {
             // Usage!
 
-
-
             // Your access token can be found at: https://ion.cesium.com/tokens.
             // This is the default access token from your ion account
 
-            Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJhNmE3MGUwMC0xZTFlLTRjNzUtYjRiZi0xMTg4NmRkMWFkMmUiLCJpZCI6MTUxOTAwLCJpYXQiOjE2ODg2NDM5NzV9.R_qSu5vM04YAu20SES8mNMhc_gxaoW1B2wPqP_cbr4I';
+            Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJmNzlhMGFmNy1hMjdmLTQxMTYtYWJlYS02ODIzNTVhN2FlYzYiLCJpZCI6MTUxOTAwLCJpYXQiOjE2ODg2NDQ3NzB9.-2WijF4n96t967UblqLZQGVJOo-eHw6CURVZP9qqblk';
 
             // Initialize the Cesium Viewer in the HTML element with the `cesiumContainer` ID.
 
@@ -99,20 +172,38 @@
 
                             }
                         });
+                        const guessContainer = document.querySelector(".guessContainer");
+                        let botY = -50;
+                        const speed = 4; // Adjust the speed of movement
+
+                        const settingsContainer = document.querySelector(".settingsContainer");
+                        let topY = -50;
+
+                        function moveElementDown() {
+                            if (topY < 30) {
+                                topY += speed;
+                                settingsContainer.style.top = topY + 'px';
+                                requestAnimationFrame(moveElementDown);
+                            }
+
+                            return;
+                        }
+                        moveElementDown();
+
+                        function moveElementUp() {
+                            if (botY < 30) {
+                                botY += speed;
+                                guessContainer.style.bottom = botY + 'px';
+                                requestAnimationFrame(moveElementUp);
+                            }
+                            return;
+                        }
+                        moveElementUp();
+
                     });
                 },
 
             });
-
-
-
-
-            // Usage!
-
-
-
-
-
 
             viewer.animation.container.style.visibility = 'hidden';
             viewer.timeline.container.style.visibility = 'hidden';
@@ -129,59 +220,131 @@
             main(item.longitude, item.latitude, item.height, item.distance);
             return item;
         }
-        // main(data.buildings[rnd].longitude, data.buildings[rnd].latitude, data.buildings[rnd].height, data.buildings[rnd].distance);
+
         let usedArray = playRound(rndArray);
 
         function gamemodeGuess(guessType, guess) {
             if (guessType == "building") {
-                if (guess == usedArray.name) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return guess === usedArray.name;
             } else if (guessType == "city") {
-                if (guess == usedArray.city) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return guess === usedArray.city;
             } else if (guessType == "country") {
-                if (guess == usedArray.country) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return guess === usedArray.country;
             }
         }
 
         let button = document.getElementById("guessButton");
         button.addEventListener("click", () => {
+
+            const advanceContainer = document.querySelector(".advanceContainer");
+            let leftX = -350;
+            const speed = 16;
+
+            function moveElementRight() {
+                if (leftX < 30) {
+                    leftX += speed;
+                    advanceContainer.style.left = leftX + 'px';
+                    requestAnimationFrame(moveElementRight);
+                }
+
+                return;
+            }
+            moveElementRight();
+
+
+
+
             let guess = document.getElementById("guessInput").value;
             let guessType = document.querySelector("select").value;
 
-            console.log("dog");
+            const answer = document.getElementById("answer");
             if (gamemodeGuess(guessType, guess)) {
-                //                 <div style="display: none;" id="guessesCorrectly" value="0"></div>
-                // <div style="display: none;" id="nGuesses" value="5"></div>
+                answer.innerHTML = "Correct!";
                 document.getElementById("guessesCorrectly").innerHTML = parseInt(document.getElementById("guessesCorrectly").innerHTML) + 1;
                 document.getElementById("guessInput").innerHTML = "";
                 console.log("GUESS WAS CORRECT :DDDDDD")
+            } else {
+                answer.innerHTML = "Incorrect!";
             }
+            const fun_fact = document.getElementById("fun-fact");
+            fun_fact.innerHTML = usedArray.fun_fact;
 
             document.getElementById("nGuesses").innerHTML = parseInt(document.getElementById("nGuesses").innerHTML) - 1;
             console.log(document.getElementById("nGuesses").innerHTML);
+        });
+        const buttonAdvance = document.getElementById("advanceButton");
+        buttonAdvance.addEventListener('click', () => {
             if (document.getElementById("nGuesses").innerHTML == 0) {
-                document.getElementById("guessDiv").innerHTML = "You got " + document.getElementById("guessesCorrectly").innerHTML + " out of 5 correct";
+                const map = document.getElementById("cesiumContainer");
+                map.classList.add("finishedMap");
+                
+                document.getElementById("score").innerHTML = "Score: " + document.getElementById("guessesCorrectly").innerHTML + "/" + "5";
+
+                const scoreContainer = document.querySelector(".scoreContainer");
+                scoreContainer.style.display = "flex";
+                let botY = -50;
+                const speed = 8;
+                function moveElementUp() {
+                    if (botY < (window.innerHeight / 2) - 25) {
+                        botY += speed;
+                        scoreContainer.style.bottom = botY + 'px';
+                        requestAnimationFrame(moveElementUp);
+                    }
+                    return;
+                }
+                moveElementUp();
             } else {
                 usedArray = playRound(rndArray);
             }
+            const guessContainer = document.querySelector(".guessContainer");
+            let botY = 30;
+            const speed = 4; // Adjust the speed of movement
+
+            const settingsContainer = document.querySelector(".settingsContainer");
+            let topY = 30;
+
+            function moveElementUp() {
+                if (topY >= -100) {
+                    topY -= speed;
+                    settingsContainer.style.top = topY + 'px';
+                    requestAnimationFrame(moveElementUp);
+                }
+
+                return;
+            }
+            moveElementUp();
+
+            function moveElementDown() {
+                if (botY >= -100) {
+                    botY -= speed;
+                    guessContainer.style.bottom = botY + 'px';
+                    requestAnimationFrame(moveElementDown);
+                }
+                return;
+            }
+            moveElementDown();
 
 
+            const advanceContainer = document.querySelector(".advanceContainer");
+            let leftX = 30;
+            const advanceSpeed = 16;
+
+            function moveElementLeft() {
+                if (leftX >= -350) {
+                    leftX -= advanceSpeed;
+                    advanceContainer.style.left = leftX + 'px';
+                    requestAnimationFrame(moveElementLeft);
+                }
+
+                return;
+            }
+            moveElementLeft();;
         });
 
-
     </script>
-    <div id="guessDiv"><input id="guessInput" placeholder="guess goes here"> <button id="guessButton">Guess</button>
+    <div class="content-box guessContainer" id="guessDiv">
+        <input id="guessInput" placeholder="guess goes here">
+        <button id="guessButton">Guess</button>
     </div>
 
 </body>
