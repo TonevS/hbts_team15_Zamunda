@@ -119,7 +119,8 @@
       "city": "Sydney",
       "country": "Australia",
       "distance": "400"
-    },{
+    },
+    {
       "name": "Reichstag Building",
       "longitude": "13.3761872",
       "latitude": "52.5186202",
@@ -128,7 +129,8 @@
       "city": "Berlin",
       "country": "Germany",
       "distance": "370"
-    },{
+    },
+    {
       "name": "Cologne Cathedral",
       "longitude": "6.9582814",
       "latitude": "50.9412784",
@@ -137,6 +139,76 @@
       "city": "Cologne",
       "country": "Germany",
       "distance": "300"
+    },
+    {
+      "name": "The Maastoren",
+      "longitude": "4.49327634",
+      "latitude": "51.90855147",
+      "height": "165",
+      "fun_fact": "The Maastoren is a skyscraper situated on the southern bank of the Nieuwe Maas river in Rotterdam. It is the tallest building in the Netherlands and serves as a commercial office building.",
+      "city": "Rotterdam",
+      "country": "The Netherlands",
+      "distance": "335"
+    },
+    {
+      "name": "The Shard",
+      "longitude": "-0.08629125",
+      "latitude": "51.50452572",
+      "height": "230",
+      "fun_fact": "The Shard is the tallest building in the United Kingdom and one of the most iconic landmarks in London. It offers panoramic views of the city from its observation decks and houses offices, a hotel, restaurants, and residential apartments.",
+      "city": "London",
+      "country": "United Kingdom",
+      "distance": "527"
+    },
+    {
+      "name": "Sydney Harbour Bridge",
+      "longitude": "151.21005353",
+      "latitude": "-33.85216674",
+      "height": "205",
+      "fun_fact": "Sydney Harbour Bridge is a steel arch bridge that spans across Sydney Harbour. It is one of the world's largest steel arch bridges and is a significant landmark in Sydney, offering stunning views of the harbor and the city skyline.",
+      "city": "Sydney",
+      "country": "Australia",
+      "distance": "266"
+    },
+    {
+      "name": "Big Ben",
+      "longitude": "-0.1246254",
+      "latitude": "51.5007292",
+      "height": "105",
+      "fun_fact": "The Great Clock of Westminster, housed within the Elizabeth Tower, is famous for its giant bell known as Big Ben. The clock tower was completed in 1859 and has since become an iconic symbol of London and British culture.",
+      "city": "London",
+      "country": "United Kingdom",
+      "distance": "192"
+    },
+    {
+      "name": "Sardijntoren",
+      "longitude": "3.56199523",
+      "latitude": "51.44787879",
+      "height": "130",
+      "fun_fact": "A.K.A Sardine Tower. It was originally built in 1948 as a water tower but has since been repurposed. The tower features an observation deck that offers panoramic views of the city, the Westerschelde river, and the coastline.",
+      "city": "Vlissingen",
+      "country": "The Netherlands",
+      "distance": "265"
+    },
+    {
+      "name": "Torre Latinoamericana",
+      "longitude": "-99.14070903",
+      "latitude": "19.43396857",
+      "height": "2302",
+      "fun_fact": "The Torre Latinoamericana is a skyscraper located in the historic center of Mexico City. It was completed in 1956 and held the title of the tallest building in Latin America for many years.",
+      "city": " Mexico City",
+      "country": "Mexico",
+      "distance": "330"
+    },
+    {
+      "name": "Acropolis of Athens",
+      "longitude": "23.72655705",
+      "latitude": "37.97141266",
+      "height": "200",
+      "fun_fact": "The Acropolis of Athens is an ancient citadel that holds tremendous historical and cultural significance as the birthplace of democracy and the cradle of Western civilization",
+      "city": " Athens",
+      "country": "Greece",
+      "distance": "270"
     }
   ]
 }
