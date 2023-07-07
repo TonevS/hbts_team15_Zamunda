@@ -64,13 +64,11 @@
         }
 
         .finishedMap {
-             
+
             filter: blur(1.5rem);
             background: gray;
             transition: opacity 1.5s ease;
         }
-
-     
     </style>
 </head>
 
@@ -78,7 +76,7 @@
     <div id="bg"></div>
     <div style="display: none;" id="guessesCorrectly">0</div>
     <div style="display: none;" id="nGuesses">5</div>
-    <div id="scorePopup" class="content-box scoreContainer" style = "display: none;">
+    <div id="scorePopup" class="content-box scoreContainer" style="display: none;">
         <p id="score"></p>
         <button id="nextRound" onclick="location.reload();">Next Round</button>
     </div>
@@ -99,7 +97,62 @@
     </div>
     <script type="module">
         import data from './building_data.json' assert { type: 'json' };
-        console.log(1);
+
+        // viewer.entities.add({
+        //     position: Cesium.Cartesian3.fromDegrees(-73.9855, 40.7431, 15000),
+        //     point: {
+        //         show: true, // default
+        //         color: Cesium.Color.YELLOW, // default: WHITE
+        //         pixelSize: 10, // default: 1
+        //     },
+        // });
+        // Cesium.Label.enableRightToLeftDetection = true;
+        // const newYork = viewer.entities.add({
+        //     position: Cesium.Cartesian3.fromDegrees(-73.9855, 40.7431, 150000),
+        //     label: {
+        //         id: 'my label',
+        //         text: 'New York',
+        //         font: '24px Helvetica',
+        //         fillColor: Cesium.Color.YELLOW,
+        //         outlineColor: Cesium.Color.BLACK,
+        //         outlineWidth: 2,
+        //         style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+        //         pixelOffset: new Cesium.Cartesian2(0, -9),
+        //         eyeOffset: new Cesium.Cartesian3(0, 0, -9),
+        //         horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+        //         verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+        //         heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+        //     },
+        // });
+
+        // viewer.entities.add({
+        //     position: Cesium.Cartesian3.fromDegrees(3.6147, 51.4965, 15000),
+        //     point: {
+        //         show: true, // default
+        //         color: Cesium.Color.YELLOW, // default: WHITE
+        //         pixelSize: 10, // default: 1
+        //         distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0, 35000000), // default: undefined
+        //     },
+        // }); 
+
+        // const middleburg = viewer.entities.add({
+        //     position: Cesium.Cartesian3.fromDegrees(3.6147, 51.4965, 150000),
+        //     label: {
+        //         id: 'my label',
+        //         text: 'Middleburg',
+        //         font: '24px Helvetica',
+        //         fillColor: Cesium.Color.YELLOW,
+        //         outlineColor: Cesium.Color.BLACK,
+        //         outlineWidth: 2,
+        //         style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+        //         pixelOffset: new Cesium.Cartesian2(0, -9),
+        //         eyeOffset: new Cesium.Cartesian3(0, 0, -9),
+        //         horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+        //         verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+        //         heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+        //     },
+        // });
+
         let state = true;
         let rndArray = [];
         for (let i = 0; i < 5; i++) {
@@ -111,21 +164,23 @@
             }
 
         }
-        console.log(rndArray);
 
         const viewer = new Cesium.Viewer("cesiumContainer", {
             globe: false,
         });
+
         try {
             const tileset = await Cesium.createGooglePhotorealistic3DTileset();
             viewer.scene.primitives.add(tileset);
         } catch (error) {
             console.log(`Failed to load tileset: ${error}`);
         }
+
         let buttonRotate = document.getElementById("rotationButton");
         buttonRotate.addEventListener("click", () => {
             state = !state;
         });
+
         async function main(longitude, latitude, height, distance) {
             // Usage!
 
@@ -135,6 +190,7 @@
             Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJmNzlhMGFmNy1hMjdmLTQxMTYtYWJlYS02ODIzNTVhN2FlYzYiLCJpZCI6MTUxOTAwLCJpYXQiOjE2ODg2NDQ3NzB9.-2WijF4n96t967UblqLZQGVJOo-eHw6CURVZP9qqblk';
 
             // Initialize the Cesium Viewer in the HTML element with the `cesiumContainer` ID.
+
 
 
             const center = Cesium.Cartesian3.fromDegrees(longitude, latitude, height);
@@ -149,61 +205,99 @@
                 return new Promise((resolve) => setTimeout(resolve, time));
             }
 
-            viewer.camera.flyTo({
-                //42.43278 25.64194
-                destination: Cesium.Cartesian3.fromDegrees(longitude, latitude, height),
-                orientation: {
-                    heading: 0,
-                    pitch: -0.3,
-                    roll: 0.0
-                },
-                duration: 3,
-                maximumHeight: 1000,
-                complete: function () {
-                    viewer.camera.lookAt(center, new Cesium.HeadingPitchRange(heading, pitch, distance));
-                    sleep(4000).then(() => {
-                        state = true;
-                        console.log(state);
-                        viewer.clock.onTick.addEventListener(() => {
-                            if (state) {
+            function flyAnimation(long, lat, height) {
+                var cartograph = Cesium.Cartographic.fromCartesian(viewer.camera.position);
+                var cameraHeight = cartograph.height;
+                var cameraLongtitude = Cesium.Math.toDegrees(cartograph.longitude);
+                var cameraLatitude = Cesium.Math.toDegrees(cartograph.latitude);
 
-                                heading += 1 * (Math.PI / 2000);
-                                viewer.camera.lookAt(center, new Cesium.HeadingPitchRange(heading, pitch, distance));
+                if (cameraHeight < 1000) {
+                    viewer.camera.flyTo({
+                        destination: Cesium.Cartesian3.fromDegrees((long + cameraLongtitude) / 2, (lat + cameraLatitude) / 2 > 0 ? (lat + cameraLatitude) / 2 - 20 : (lat + cameraLatitude) / 2 + 20, cameraHeight + 10000000),
+                        orientation: {
+                            heading: Cesium.Math.toRadians(0.0),
+                            pitch: Cesium.Math.toRadians(-80.0),
+                        },
+                        complete: function () {
+                            const dashedLine = viewer.entities.add({
+                                name: "Blue dashed line",
+                                polyline: {
+                                    positions: Cesium.Cartesian3.fromDegreesArrayHeights([
+                                        cameraLongtitude,
+                                        cameraLatitude,
+                                        1000,
+                                        long,
+                                        lat,
+                                        1000,
+                                    ]),
+                                    width: 4,
+                                    material: new Cesium.PolylineDashMaterialProperty({
+                                        color: Cesium.Color.CYAN,
+                                    }),
+                                },
+                            });
+                            sleep(4000).then(() => {
+                                state = true;
+                                console.log(state);
+                                viewer.clock.onTick.addEventListener(() => {
+                                    if (state) {
 
-                            }
-                        });
-                        const guessContainer = document.querySelector(".guessContainer");
-                        let botY = -50;
-                        const speed = 4; // Adjust the speed of movement
+                                        heading += 1 * (Math.PI / 2000);
+                                        viewer.camera.lookAt(center, new Cesium.HeadingPitchRange(heading, pitch, distance));
 
-                        const settingsContainer = document.querySelector(".settingsContainer");
-                        let topY = -50;
+                                    }
+                                });
+                                const guessContainer = document.querySelector(".guessContainer");
+                                let botY = -50;
+                                const speed = 4; // Adjust the speed of movement
 
-                        function moveElementDown() {
-                            if (topY < 30) {
-                                topY += speed;
-                                settingsContainer.style.top = topY + 'px';
-                                requestAnimationFrame(moveElementDown);
-                            }
+                                const settingsContainer = document.querySelector(".settingsContainer");
+                                let topY = -50;
 
-                            return;
+                                function moveElementDown() {
+                                    if (topY < 30) {
+                                        topY += speed;
+                                        settingsContainer.style.top = topY + 'px';
+                                        requestAnimationFrame(moveElementDown);
+                                    }
+
+                                    return;
+                                }
+                                moveElementDown();
+
+                                function moveElementUp() {
+                                    if (botY < 30) {
+                                        botY += speed;
+                                        guessContainer.style.bottom = botY + 'px';
+                                        requestAnimationFrame(moveElementUp);
+                                    }
+                                    return;
+                                }
+                                moveElementUp();
+
+                            });
                         }
-                        moveElementDown();
+                    })
+                }
 
-                        function moveElementUp() {
-                            if (botY < 30) {
-                                botY += speed;
-                                guessContainer.style.bottom = botY + 'px';
-                                requestAnimationFrame(moveElementUp);
-                            }
-                            return;
+                if (cameraHeight < 1000) {
+                    setTimeout(flyDestination, 5000)
+                } else {
+                    flyDestination();
+                }
+
+
+                function flyDestination() {
+                    viewer.camera.flyTo({
+                        destination: Cesium.Cartesian3.fromDegrees(long, lat, height),
+                        orientation: {
+                            heading: Cesium.Math.toRadians(0.0),
+                            pitch: Cesium.Math.toRadians(-35.0),
                         }
-                        moveElementUp();
-
                     });
-                },
-
-            });
+                }
+            }
+            flyAnimation(longitude, latitude, height);
 
             viewer.animation.container.style.visibility = 'hidden';
             viewer.timeline.container.style.visibility = 'hidden';
@@ -211,8 +305,8 @@
             // Add Cesium OSM Buildings, a global 3D buildings layer.
             // const buildingTileset = await Cesium.createOsmBuildingsAsync();
             // viewer.scene.primitives.add(buildingTileset);   
-
         }
+
         function playRound(jsonArray) {
             const item = jsonArray.pop();
             console.log(item);
@@ -277,7 +371,8 @@
             if (document.getElementById("nGuesses").innerHTML == 0) {
                 const map = document.getElementById("cesiumContainer");
                 map.classList.add("finishedMap");
-                
+
+
                 document.getElementById("score").innerHTML = "Score: " + document.getElementById("guessesCorrectly").innerHTML + "/" + "5";
 
                 const scoreContainer = document.querySelector(".scoreContainer");
@@ -346,7 +441,6 @@
         <input id="guessInput" placeholder="guess goes here">
         <button id="guessButton">Guess</button>
     </div>
-
 </body>
 
 </html>
