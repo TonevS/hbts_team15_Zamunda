@@ -19,12 +19,14 @@
             padding: 5px;
 
         }
+
         button:hover {
             background-color: rgb(186, 186, 186);
             color: black !important;
             border: 1px solid black !important;
-           
+
         }
+
         button {
             border-radius: 8px;
             border: 0;
@@ -78,9 +80,11 @@
             z-index: 4;
             bottom: -350px;
         }
+
         .cesium-viewer-bottom {
             display: none;
         }
+
         .advanceContainer {
             position: absolute;
             display: flex;
@@ -134,286 +138,291 @@
         color: black;
     }
 </style>
-    <div class="content-box settingsContainer">
-        <select>
-            <option value="building">Guess the Building</option>
-            <option selected value="city">Guess the City</option>
-            <option value="country">Guess the Country</option>
-        </select>
-        <button id="rotationButton">Rotate</button>
-        <button id="test" onclick="location.reload();">Restart</button>
-      
-    </div>
-    <div id="cesiumContainer" style="height: 100vh;"></div>
-    <div class="advanceContainer content-box">
-        <span style="font-size: 2em;" id="answer"></span>
-        <p style=" width: 90%;  text-justify: inter-word;text-align: justify; " id="fun-fact"></p>
-        <button id="advanceButton">Next</button>
-    </div>
-    <script type="module">
-        import data from './building_data.json' assert { type: 'json' };
-        console.log(1);
-        let state = true;
-        let rndArray = [];
-        for (let i = 0; i < 5; i++) {
-            let rnd = Math.floor(Math.random() * data.buildings.length);
-            if (rndArray.includes(data.buildings[rnd])) {
-                i--;
-            } else {
-                rndArray.push(data.buildings[rnd]);
-            }
+<div class="content-box settingsContainer">
+    <select>
+        <option value="building">Guess the Building</option>
+        <option selected value="city">Guess the City</option>
+        <option value="country">Guess the Country</option>
+    </select>
+    <button id="rotationButton">Rotate</button>
+    <button id="test" onclick="location.reload();">Restart</button>
 
+</div>
+<div id="cesiumContainer" style="height: 100vh;"></div>
+<div class="advanceContainer content-box">
+    <span style="font-size: 2em;" id="answer"></span>
+    <p style=" width: 90%;  text-justify: inter-word;text-align: justify; " id="fun-fact"></p>
+    <button id="advanceButton">Next</button>
+</div>
+<script type="module">
+    import data from './building_data.json' assert { type: 'json' };
+    console.log(1);
+    let state = true;
+    let rndArray = [];
+    for (let i = 0; i < 5; i++) {
+        let rnd = Math.floor(Math.random() * data.buildings.length);
+        if (rndArray.includes(data.buildings[rnd])) {
+            i--;
+        } else {
+            rndArray.push(data.buildings[rnd]);
         }
-        console.log(rndArray);
 
-        const viewer = new Cesium.Viewer("cesiumContainer", {
-            globe: false,
-        });
-        try {
-            const tileset = await Cesium.createGooglePhotorealistic3DTileset();
-            viewer.scene.primitives.add(tileset);
-        } catch (error) {
-            console.log(`Failed to load tileset: ${error}`);
+    }
+    console.log(rndArray);
+
+    const viewer = new Cesium.Viewer("cesiumContainer", {
+        globe: false,
+    });
+    try {
+        const tileset = await Cesium.createGooglePhotorealistic3DTileset();
+        viewer.scene.primitives.add(tileset);
+    } catch (error) {
+        console.log(`Failed to load tileset: ${error}`);
+    }
+    let buttonRotate = document.getElementById("rotationButton");
+    buttonRotate.addEventListener("click", () => {
+        state = !state;
+    });
+    async function main(longitude, latitude, height, distance) {
+        // Usage!
+
+        // Your access token can be found at: https://ion.cesium.com/tokens.
+        // This is the default access token from your ion account
+
+        Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJmNzlhMGFmNy1hMjdmLTQxMTYtYWJlYS02ODIzNTVhN2FlYzYiLCJpZCI6MTUxOTAwLCJpYXQiOjE2ODg2NDQ3NzB9.-2WijF4n96t967UblqLZQGVJOo-eHw6CURVZP9qqblk';
+
+        // Initialize the Cesium Viewer in the HTML element with the `cesiumContainer` ID.
+
+
+        const center = Cesium.Cartesian3.fromDegrees(longitude, latitude, height);
+        // Fly the camera to San Francisco at the given longitude, latitude, and height.
+        const transform = Cesium.Transforms.eastNorthUpToFixedFrame(center);
+
+        var heading = 0;
+        var pitch = -0.3;
+
+
+        function sleep(time) {
+            return new Promise((resolve) => setTimeout(resolve, time));
         }
-        let buttonRotate = document.getElementById("rotationButton");
-        buttonRotate.addEventListener("click", () => {
-            state = !state;
-        });
-        async function main(longitude, latitude, height, distance) {
-            // Usage!
-
-            // Your access token can be found at: https://ion.cesium.com/tokens.
-            // This is the default access token from your ion account
-
-            Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJmNzlhMGFmNy1hMjdmLTQxMTYtYWJlYS02ODIzNTVhN2FlYzYiLCJpZCI6MTUxOTAwLCJpYXQiOjE2ODg2NDQ3NzB9.-2WijF4n96t967UblqLZQGVJOo-eHw6CURVZP9qqblk';
-
-            // Initialize the Cesium Viewer in the HTML element with the `cesiumContainer` ID.
 
 
-            const center = Cesium.Cartesian3.fromDegrees(longitude, latitude, height);
-            // Fly the camera to San Francisco at the given longitude, latitude, and height.
-            const transform = Cesium.Transforms.eastNorthUpToFixedFrame(center);
 
-            var heading = 0;
-            var pitch = -0.3;
+        viewer.camera.flyTo({
+            //42.43278 25.64194
+            destination: Cesium.Cartesian3.fromDegrees(longitude, latitude, height),
+            orientation: {
+                heading: 0,
+                pitch: -1
 
+            },
+            duration: 5,
+            minimumHeight: 5000,
+            complete: function () {
+                viewer.camera.lookAt(center, new Cesium.HeadingPitchRange(heading, pitch, distance));
+                sleep(4000).then(() => {
+                    state = true;
+                    console.log(state);
+                    viewer.clock.onTick.addEventListener(() => {
+                        if (state) {
 
-            function sleep(time) {
-                return new Promise((resolve) => setTimeout(resolve, time));
-            }
-   
+                            heading += 1 * (Math.PI / 2000);
+                            viewer.camera.lookAt(center, new Cesium.HeadingPitchRange(heading, pitch, distance));
 
-
-            viewer.camera.flyTo({
-                //42.43278 25.64194
-                destination: Cesium.Cartesian3.fromDegrees(longitude, latitude, height),
-                orientation: {
-                    heading: 0,
-                    pitch: -1
-                    
-                },
-                duration: 5,
-                minimumHeight: 5000,
-                complete: function () {
-                    viewer.camera.lookAt(center, new Cesium.HeadingPitchRange(heading, pitch, distance));
-                    sleep(4000).then(() => {
-                        state = true;
-                        console.log(state);
-                        viewer.clock.onTick.addEventListener(() => {
-                            if (state) {
-
-                                heading += 1 * (Math.PI / 2000);
-                                viewer.camera.lookAt(center, new Cesium.HeadingPitchRange(heading, pitch, distance));
-
-                            }
-                        });
-                        const guessContainer = document.querySelector(".guessContainer");
-                        let botY = -50;
-                        const speed = 4; // Adjust the speed of movement
-
-                        const settingsContainer = document.querySelector(".settingsContainer");
-                        let topY = -50;
-
-                        function moveElementDown() {
-                            if (topY < 30) {
-                                topY += speed;
-                                settingsContainer.style.top = topY + 'px';
-                                requestAnimationFrame(moveElementDown);
-                            }
-
-                            return;
                         }
-                        moveElementDown();
+                    });
+                    const guessContainer = document.querySelector(".guessContainer");
+                    let botY = -50;
+                    const speed = 4; // Adjust the speed of movement
 
-                        function moveElementUp() {
-                            if (botY < 30) {
+                    const settingsContainer = document.querySelector(".settingsContainer");
+                    let topY = -50;
+
+                    function moveElementDown() {
+                        if (topY < 30) {
+                            topY += speed;
+                            settingsContainer.style.top = topY + 'px';
+                            requestAnimationFrame(moveElementDown);
+                        }
+
+                        return;
+                    }
+                    moveElementDown();
+
+                    function moveElementUp() {
+                        if (window.innerHeight < 700) {
+                            if (botY < 60) {
                                 botY += speed;
                                 guessContainer.style.bottom = botY + 'px';
                                 requestAnimationFrame(moveElementUp);
                             }
-                            return;
+                        } else if (botY < 30) {
+                            botY += speed;
+                            guessContainer.style.bottom = botY + 'px';
+                            requestAnimationFrame(moveElementUp);
                         }
-                        moveElementUp();
+                        return;
+                    }
+                    moveElementUp();
 
-                    });
-                    
-                },
+                });
 
-            });
+            },
 
-            viewer.animation.container.style.visibility = 'hidden';
-            viewer.timeline.container.style.visibility = 'hidden';
-
-            // Add Cesium OSM Buildings, a global 3D buildings layer.
-            // const buildingTileset = await Cesium.createOsmBuildingsAsync();
-            // viewer.scene.primitives.add(buildingTileset);   
-
-        }
-        function playRound(jsonArray) {
-            const item = jsonArray.pop();
-            console.log(item);
-            state = false;
-            main(item.longitude, item.latitude, item.height, item.distance);
-            return item;
-        }
-
-        let usedArray = playRound(rndArray);
-
-        function gamemodeGuess(guessType, guess) {
-            if (guessType == "building") {
-                return guess === usedArray.name;
-            } else if (guessType == "city") {
-                return guess === usedArray.city;
-            } else if (guessType == "country") {
-                return guess === usedArray.country;
-            }
-        }
-
-        let button = document.getElementById("guessButton");
-        button.addEventListener("click", () => {
-        
-            const advanceContainer = document.querySelector(".advanceContainer");
-            let leftX = -350;
-            const speed = 16;
-
-            function moveElementRight() {
-                if (leftX < 30) {
-                    leftX += speed;
-                    advanceContainer.style.left = leftX + 'px';
-                    requestAnimationFrame(moveElementRight);
-                }
-
-                return;
-            }
-            moveElementRight();
-
-
-
-
-            let guess = document.getElementById("guessInput").value;
-            let guessType = document.querySelector("select").value;
-
-            const answer = document.getElementById("answer");
-            if (gamemodeGuess(guessType, guess)) {
-                answer.innerHTML = "Correct!";
-                document.getElementById("guessesCorrectly").innerHTML = parseInt(document.getElementById("guessesCorrectly").innerHTML) + 1;
-                document.getElementById("guessInput").innerHTML = "";
-                console.log("GUESS WAS CORRECT :DDDDDD")
-            } else {
-                answer.innerHTML = "Incorrect!";
-            }
-            const fun_fact = document.getElementById("fun-fact");
-            fun_fact.innerHTML = "Fun Fact: " + usedArray.fun_fact;
-
-            document.getElementById("nGuesses").innerHTML = parseInt(document.getElementById("nGuesses").innerHTML) - 1;
-            console.log(document.getElementById("nGuesses").innerHTML);
-                const guessInput = document.querySelector("#guessInput");
-            guessInput.value = "";
-            
         });
-        const buttonAdvance = document.getElementById("advanceButton");
-        buttonAdvance.addEventListener('click', () => {
-               const guessContainer = document.querySelector(".guessContainer");
 
-            let botY = 30;
-            const speed = 4; // Adjust the speed of movement
+        viewer.animation.container.style.visibility = 'hidden';
+        viewer.timeline.container.style.visibility = 'hidden';
 
-            const settingsContainer = document.querySelector(".settingsContainer");
-            let topY = 30;
+        // Add Cesium OSM Buildings, a global 3D buildings layer.
+        // const buildingTileset = await Cesium.createOsmBuildingsAsync();
+        // viewer.scene.primitives.add(buildingTileset);   
 
+    }
+    function playRound(jsonArray) {
+        const item = jsonArray.pop();
+        console.log(item);
+        state = false;
+        main(item.longitude, item.latitude, item.height, item.distance);
+        return item;
+    }
+
+    let usedArray = playRound(rndArray);
+
+    function gamemodeGuess(guessType, guess) {
+        if (guessType == "building") {
+            return guess === usedArray.name;
+        } else if (guessType == "city") {
+            return guess === usedArray.city;
+        } else if (guessType == "country") {
+            return guess === usedArray.country;
+        }
+    }
+
+    let button = document.getElementById("guessButton");
+    button.addEventListener("click", () => {
+
+        const advanceContainer = document.querySelector(".advanceContainer");
+        let leftX = -350;
+        const speed = 16;
+
+        function moveElementRight() {
+            if (leftX < 30) {
+                leftX += speed;
+                advanceContainer.style.left = leftX + 'px';
+                requestAnimationFrame(moveElementRight);
+            }
+
+            return;
+        }
+        moveElementRight();
+
+
+
+
+        let guess = document.getElementById("guessInput").value;
+        let guessType = document.querySelector("select").value;
+
+        const answer = document.getElementById("answer");
+        if (gamemodeGuess(guessType, guess)) {
+            answer.innerHTML = "Correct!";
+            document.getElementById("guessesCorrectly").innerHTML = parseInt(document.getElementById("guessesCorrectly").innerHTML) + 1;
+            document.getElementById("guessInput").innerHTML = "";
+            console.log("GUESS WAS CORRECT :DDDDDD")
+        } else {
+            answer.innerHTML = "Incorrect!";
+        }
+        const fun_fact = document.getElementById("fun-fact");
+        fun_fact.innerHTML = "Fun Fact: " + usedArray.fun_fact;
+
+        document.getElementById("nGuesses").innerHTML = parseInt(document.getElementById("nGuesses").innerHTML) - 1;
+        console.log(document.getElementById("nGuesses").innerHTML);
+        const guessInput = document.querySelector("#guessInput");
+        guessInput.value = "";
+
+    });
+    const buttonAdvance = document.getElementById("advanceButton");
+    buttonAdvance.addEventListener('click', () => {
+        const guessContainer = document.querySelector(".guessContainer");
+
+        let botY = 30;
+        const speed = 4; // Adjust the speed of movement
+
+        const settingsContainer = document.querySelector(".settingsContainer");
+        let topY = 30;
+
+        function moveElementUp() {
+            if (topY >= -100) {
+                topY -= speed;
+                settingsContainer.style.top = topY + 'px';
+                requestAnimationFrame(moveElementUp);
+            }
+
+            return;
+        }
+        moveElementUp();
+
+        function moveElementDown() {
+            if (botY >= -100) {
+                botY -= speed;
+                guessContainer.style.bottom = botY + 'px';
+                requestAnimationFrame(moveElementDown);
+            }
+            return;
+        }
+        moveElementDown();
+
+
+        const advanceContainer = document.querySelector(".advanceContainer");
+        let leftX = 30;
+        const advanceSpeed = 16;
+
+        function moveElementLeft() {
+            if (leftX >= -350) {
+                leftX -= advanceSpeed;
+                advanceContainer.style.left = leftX + 'px';
+                requestAnimationFrame(moveElementLeft);
+            }
+
+            return;
+        }
+        moveElementLeft();;
+        if (document.getElementById("nGuesses").innerHTML == 0) {
+            const map = document.getElementById("cesiumContainer");
+            map.classList.add("finishedMap");
+
+            document.getElementById("score").innerHTML = "Score: " + document.getElementById("guessesCorrectly").innerHTML + "/" + "5";
+
+            const scoreContainer = document.querySelector(".scoreContainer");
+            scoreContainer.style.display = "flex";
+            let botY = -50;
+            const speed = 8;
             function moveElementUp() {
-                if (topY >= -100) {
-                    topY -= speed;
-                    settingsContainer.style.top = topY + 'px';
+                if (botY < (window.innerHeight / 2) - 25) {
+                    botY += speed;
+                    scoreContainer.style.bottom = botY + 'px';
                     requestAnimationFrame(moveElementUp);
                 }
-
                 return;
             }
             moveElementUp();
-
-            function moveElementDown() {
-                if (botY >= -100) {
-                    botY -= speed;
-                    guessContainer.style.bottom = botY + 'px';
-                    requestAnimationFrame(moveElementDown);
-                }
-                return;
+        } else {
+            function sleeps(time) {
+                return new Promise((resolve) => setTimeout(resolve, time));
             }
-            moveElementDown();
+            sleeps(1300).then(() => { usedArray = playRound(rndArray); });
+
+        }
 
 
-            const advanceContainer = document.querySelector(".advanceContainer");
-            let leftX = 30;
-            const advanceSpeed = 16;
+    });
 
-            function moveElementLeft() {
-                if (leftX >= -350) {
-                    leftX -= advanceSpeed;
-                    advanceContainer.style.left = leftX + 'px';
-                    requestAnimationFrame(moveElementLeft);
-                }
-
-                return;
-            }
-            moveElementLeft();;
-            if (document.getElementById("nGuesses").innerHTML == 0) {
-                const map = document.getElementById("cesiumContainer");
-                map.classList.add("finishedMap");
-                
-                document.getElementById("score").innerHTML = "Score: " + document.getElementById("guessesCorrectly").innerHTML + "/" + "5";
-
-                const scoreContainer = document.querySelector(".scoreContainer");
-                scoreContainer.style.display = "flex";
-                let botY = -50;
-                const speed = 8;
-                function moveElementUp() {
-                    if (botY < (window.innerHeight / 2) - 25) {
-                        botY += speed;
-                        scoreContainer.style.bottom = botY + 'px';
-                        requestAnimationFrame(moveElementUp);
-                    }
-                    return;
-                }
-                moveElementUp();
-            } else {
-                function sleeps(time) {
-                    return new Promise((resolve) => setTimeout(resolve, time));
-                }
-                 sleeps(1300).then(() => { usedArray = playRound(rndArray); });
-               
-            }
-         
-            
-        });
-
-    </script>
-    <div class="content-box guessContainer" id="guessDiv">
-        <input id="guessInput" placeholder="Enter your guess here."
-            style="flex: 1; border-radius: 8px; border: 0; padding: 2px;   box-shadow: inset 0 0 10px #ababab;">
-        <button id="guessButton"
-            style=" border-radius: 8px; border:0; ">Guess</button>
-    </div>
+</script>
+<div class="content-box guessContainer" id="guessDiv">
+    <input id="guessInput" placeholder="Enter your guess here."
+        style="flex: 1; border-radius: 8px; border: 0; padding: 2px;   box-shadow: inset 0 0 10px #ababab;">
+    <button id="guessButton" style=" border-radius: 8px; border:0; ">Guess</button>
+</div>
 
 </body>
 
