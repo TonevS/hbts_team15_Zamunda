@@ -106,14 +106,14 @@
     <div id="scorePopup" class="content-box scoreContainer" style="display: none;">
         <p id="score"></p>
         <button id="nextRound" onclick="location.reload();">Next Round</button>
-        <p style="font-size: 1.5em;" id="credits"> 
-        Ivo Petkov,
-        Lewie Zhu,
-        Antani Tonev,
-        Damyan Dimitrov,
-        Emil Hristov,
-        Samuel Chukwu,
-        Michal Jakubowski, 
+        <p style="font-size: 1.5em;" id="credits">
+            Ivo Petkov,
+            Lewie Zhu,
+            Antani Tonev,
+            Damyan Dimitrov,
+            Emil Hristov,
+            Samuel Chukwu,
+            Michal Jakubowski,
         </p>
     </div>
     <div class="content-box settingsContainer">
@@ -124,7 +124,7 @@
         </select>
         <button id="rotationButton">Rotate</button>
         <button id="test" onclick="location.reload();">Restart</button>
-      
+
     </div>
     <div id="cesiumContainer"></div>
     <div class="advanceContainer content-box">
@@ -327,7 +327,7 @@
                             }, 4000);
                         }
                     });
-                    
+
                 }
             }
             flyAnimation(longitude, latitude, height);
@@ -342,7 +342,7 @@
         }
         let button = document.getElementById("guessButton");
         button.addEventListener("click", () => {
-        
+
             const advanceContainer = document.querySelector(".advanceContainer");
             let leftX = -350;
             const speed = 16;
@@ -378,9 +378,9 @@
 
             document.getElementById("nGuesses").innerHTML = parseInt(document.getElementById("nGuesses").innerHTML) - 1;
             console.log(document.getElementById("nGuesses").innerHTML);
-                const guessInput = document.querySelector("#guessInput");
+            const guessInput = document.querySelector("#guessInput");
             guessInput.value = "";
-            
+
         });
         const buttonAdvance = document.getElementById("advanceButton");
         buttonAdvance.addEventListener('click', () => {
@@ -454,7 +454,7 @@
             if (document.getElementById("nGuesses").innerHTML == 0) {
                 const map = document.getElementById("cesiumContainer");
                 map.classList.add("finishedMap");
-                
+
                 document.getElementById("score").innerHTML = "Score: " + document.getElementById("guessesCorrectly").innerHTML + "/" + "5";
 
                 const scoreContainer = document.querySelector(".scoreContainer");
@@ -474,11 +474,11 @@
                 function sleeps(time) {
                     return new Promise((resolve) => setTimeout(resolve, time));
                 }
-                 sleeps(1300).then(() => { usedArray = playRound(rndArray); });
-               
+                sleeps(1300).then(() => { usedArray = playRound(rndArray); });
+
             }
-         
-            
+
+
         });
 
     </script>
