@@ -9,35 +9,62 @@
 
     <style>
         .content-box {
-            background-color: rgb(44, 44, 44);
+            background-color: rgb(255, 255, 255);
             padding: 1em;
+            border-radius: 10px;
+        }
+
+        ::placeholder {
+
+            padding: 5px;
+
+        }
+
+        button {
+            border-radius: 8px;
+            border: 0;
+            background-color: rgb(36, 36, 36);
+            color: white;
+            height: 38px;
+        }
+
+        * {
+            font-family: 'Inter', sans-serif;
         }
 
         body {
             width: 100vw;
             height: 100vh;
             overflow: hidden;
+
         }
 
         .settingsContainer {
+            border-radius: 10px;
             position: absolute;
-            display: flex;
-            flex-direction: column;
-            height: fit-content;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            height: 35px;
+            gap: 20px;
+            width: 300px;
             left: 2em;
             top: -100px;
             z-index: 2;
         }
 
         .guessContainer {
+            border-radius: 10px;
             position: absolute;
             display: flex;
+            gap: 20px;
             width: 400px;
+            height: 35px;
             right: 2em;
             z-index: 2;
         }
 
         .scoreContainer {
+            border-radius: 10px;
             position: absolute;
             flex-direction: column;
             width: 400px;
@@ -64,13 +91,11 @@
         }
 
         .finishedMap {
-             
+
             filter: blur(1.5rem);
             background: gray;
             transition: opacity 1.5s ease;
         }
-
-     
     </style>
 </head>
 
@@ -78,23 +103,33 @@
     <div id="bg"></div>
     <div style="display: none;" id="guessesCorrectly">0</div>
     <div style="display: none;" id="nGuesses">5</div>
-    <div id="scorePopup" class="content-box scoreContainer" style = "display: none;">
+    <div id="scorePopup" class="content-box scoreContainer" style="display: none;">
         <p id="score"></p>
         <button id="nextRound" onclick="location.reload();">Next Round</button>
+        <p style="font-size: 1.5em;" id="credits"> 
+        Ivo Petkov,
+        Lewie Zhu,
+        Antani Tonev,
+        Damyan Dimitrov,
+        Emil Hristov,
+        Samuel Chukwu,
+        Michal Jakubowski, 
+        </p>
     </div>
     <div class="content-box settingsContainer">
-        <button id="rotationButton">Stop</button>
-        <button id="test">Stop</button>
         <select>
             <option value="building">Guess the Building</option>
             <option selected value="city">Guess the City</option>
             <option value="country">Guess the Country</option>
         </select>
+        <button id="rotationButton">Rotate</button>
+        <button id="test" onclick="location.reload();">Restart</button>
+      
     </div>
     <div id="cesiumContainer"></div>
     <div class="advanceContainer content-box">
-        <span id="answer"></span>
-        <p id="fun-fact"></p>
+        <span style="font-size: 2em;" id="answer"></span>
+        <p style=" width: 90%;  text-justify: inter-word;text-align: justify; " id="fun-fact"></p>
         <button id="advanceButton">Next</button>
     </div>
     <script type="module">
@@ -201,6 +236,7 @@
                         moveElementUp();
 
                     });
+                    
                 },
 
             });
@@ -235,7 +271,7 @@
 
         let button = document.getElementById("guessButton");
         button.addEventListener("click", () => {
-
+        
             const advanceContainer = document.querySelector(".advanceContainer");
             let leftX = -350;
             const speed = 16;
@@ -267,36 +303,18 @@
                 answer.innerHTML = "Incorrect!";
             }
             const fun_fact = document.getElementById("fun-fact");
-            fun_fact.innerHTML = usedArray.fun_fact;
+            fun_fact.innerHTML = "Fun Fact: " + usedArray.fun_fact;
 
             document.getElementById("nGuesses").innerHTML = parseInt(document.getElementById("nGuesses").innerHTML) - 1;
             console.log(document.getElementById("nGuesses").innerHTML);
+                const guessInput = document.querySelector("#guessInput");
+            guessInput.value = "";
+            
         });
         const buttonAdvance = document.getElementById("advanceButton");
         buttonAdvance.addEventListener('click', () => {
-            if (document.getElementById("nGuesses").innerHTML == 0) {
-                const map = document.getElementById("cesiumContainer");
-                map.classList.add("finishedMap");
-                
-                document.getElementById("score").innerHTML = "Score: " + document.getElementById("guessesCorrectly").innerHTML + "/" + "5";
+               const guessContainer = document.querySelector(".guessContainer");
 
-                const scoreContainer = document.querySelector(".scoreContainer");
-                scoreContainer.style.display = "flex";
-                let botY = -50;
-                const speed = 8;
-                function moveElementUp() {
-                    if (botY < (window.innerHeight / 2) - 25) {
-                        botY += speed;
-                        scoreContainer.style.bottom = botY + 'px';
-                        requestAnimationFrame(moveElementUp);
-                    }
-                    return;
-                }
-                moveElementUp();
-            } else {
-                usedArray = playRound(rndArray);
-            }
-            const guessContainer = document.querySelector(".guessContainer");
             let botY = 30;
             const speed = 4; // Adjust the speed of movement
 
@@ -339,12 +357,42 @@
                 return;
             }
             moveElementLeft();;
+            if (document.getElementById("nGuesses").innerHTML == 0) {
+                const map = document.getElementById("cesiumContainer");
+                map.classList.add("finishedMap");
+                
+                document.getElementById("score").innerHTML = "Score: " + document.getElementById("guessesCorrectly").innerHTML + "/" + "5";
+
+                const scoreContainer = document.querySelector(".scoreContainer");
+                scoreContainer.style.display = "flex";
+                let botY = -50;
+                const speed = 8;
+                function moveElementUp() {
+                    if (botY < (window.innerHeight / 2) - 25) {
+                        botY += speed;
+                        scoreContainer.style.bottom = botY + 'px';
+                        requestAnimationFrame(moveElementUp);
+                    }
+                    return;
+                }
+                moveElementUp();
+            } else {
+                function sleeps(time) {
+                    return new Promise((resolve) => setTimeout(resolve, time));
+                }
+                 sleeps(1300).then(() => { usedArray = playRound(rndArray); });
+               
+            }
+         
+            
         });
 
     </script>
     <div class="content-box guessContainer" id="guessDiv">
-        <input id="guessInput" placeholder="guess goes here">
-        <button id="guessButton">Guess</button>
+        <input id="guessInput" placeholder="Enter your guess here."
+            style="flex: 1; border-radius: 8px; border: 0; padding: 2px;   box-shadow: inset 0 0 10px #ababab;">
+        <button id="guessButton"
+            style=" border-radius: 8px; border:0; background-color: rgb(36, 36, 36); color:white;">Guess</button>
     </div>
 
 </body>
